@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ import { Plus, Pencil, Trash2, Save, X, BookOpen, Archive } from 'lucide-react';
 import { format } from 'date-fns';
 import { getDailyStoicQuote } from '@/ai/flows/daily-stoic-quote';
 import TimeLeftTimer from './TimeLeftTimer';
+import MusicToggle from './MusicToggle';
 
 type Task = {
   id: string;
@@ -46,6 +47,9 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
   const [currentDate, setCurrentDate] = useState('');
   const [quote, setQuote] = useState(initialQuote);
   const [isRefreshingQuote, setIsRefreshingQuote] = useState(false);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
 
   useEffect(() => {
     setIsClient(true);
@@ -171,6 +175,17 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     setEditingTaskId(null);
     setEditingTaskText('');
   };
+
+  const toggleMusic = () => {
+    if (audioRef.current) {
+        if (isMusicPlaying) {
+            audioRef.current.pause();
+        } else {
+            audioRef.current.play();
+        }
+        setIsMusicPlaying(!isMusicPlaying);
+    }
+  };
   
   if (!isClient) {
       return null;
@@ -252,7 +267,7 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
           </CardContent>
         </Card>
         
-        <div className="text-center mt-4 flex justify-center gap-4">
+        <div className="text-center mt-4 flex justify-center items-center gap-4">
             <Button asChild variant="link" className="text-lg md:text-xl text-foreground hover:text-primary">
                 <Link href="/reflection">
                     <BookOpen className="mr-2 h-5 w-5"/> Daily Reflection
@@ -263,7 +278,9 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
                     <Archive className="mr-2 h-5 w-5"/> View Archive
                 </Link>
             </Button>
+            <MusicToggle isPlaying={isMusicPlaying} onToggle={toggleMusic} />
         </div>
+        <audio ref={audioRef} src="/vagabond.mp3" loop />
       </main>
     </div>
   );
