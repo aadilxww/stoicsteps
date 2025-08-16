@@ -31,25 +31,16 @@ export async function getDailyStoicQuote(): Promise<DailyStoicQuoteOutput> {
   return dailyStoicQuoteFlow();
 }
 
-const prompt = ai.definePrompt({
-  name: 'dailyStoicQuotePrompt',
-  output: {schema: DailyStoicQuoteOutputSchema},
-  prompt: `Here is a list of stoic quotes:
-
-${stoicQuotes.map((quote, index) => `${index + 1}. ${quote}`).join('\n')}
-
-Choose one quote from the list above. Just respond with the quote.`,
-});
-
 const dailyStoicQuoteFlow = ai.defineFlow(
   {
     name: 'dailyStoicQuoteFlow',
     outputSchema: DailyStoicQuoteOutputSchema,
   },
   async () => {
-    const {output} = await prompt({});
+    const randomIndex = Math.floor(Math.random() * stoicQuotes.length);
+    const randomQuote = stoicQuotes[randomIndex];
     return {
-      quote: output!.quote,
+      quote: randomQuote,
     };
   }
 );
