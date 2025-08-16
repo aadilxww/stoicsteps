@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Progress } from '@/components/ui/progress';
+import SisyphusAnimation from '@/components/SisyphusAnimation';
 import { Plus, Pencil, Trash2, Save, X, BookOpen } from 'lucide-react';
 import { format } from 'date-fns';
 import { getDailyStoicQuote } from '@/ai/flows/daily-stoic-quote';
@@ -161,9 +161,7 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     <div className="flex flex-col items-center min-h-screen p-4 md:p-8 bg-background text-foreground text-2xl md:text-3xl">
       <main className="w-full max-w-2xl mx-auto flex flex-col gap-8">
         
-        <div className="w-full my-8">
-            <Progress value={progress} className="w-full h-4 border-2 border-foreground rounded-none" />
-        </div>
+        <SisyphusAnimation progress={progress} />
 
         <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none">
           <CardHeader className="flex flex-row items-center justify-between">
