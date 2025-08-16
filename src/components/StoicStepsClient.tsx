@@ -66,11 +66,13 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     setIsMusicPlaying(prev => {
         const shouldPlay = !prev;
         if (shouldPlay) {
-            audioElement.currentTime = 15;
             audioElement.play().catch(error => {
               console.error("Error playing audio:", error);
               return false; // Revert state if play fails
             });
+             if (audioElement.currentTime < 15 || audioElement.currentTime > 15) {
+               audioElement.currentTime = 15
+             }
         } else {
             audioElement.pause();
         }
@@ -82,9 +84,22 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     const audioElement = audioRef.current;
     if (audioElement) {
         const handleLoop = () => {
-            audioElement.currentTime = 15;
+             if (audioElement.currentTime < 15 || audioElement.currentTime > 15) {
+               audioElement.currentTime = 15
+             }
             audioElement.play();
         };
+
+        const startMusic = () => {
+          setIsMusicPlaying(true);
+          audioElement.currentTime = 15;
+          audioElement.play().catch(error => {
+              console.error("Error playing audio:", error);
+              setIsMusicPlaying(false);
+          });
+        };
+        
+        startMusic();
 
         audioElement.addEventListener('ended', handleLoop);
         
@@ -317,7 +332,3 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     </div>
   );
 }
-
-    
-
-    
