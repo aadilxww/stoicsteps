@@ -21,8 +21,7 @@ const SisyphusAnimation: React.FC<SisyphusAnimationProps> = ({ progress }) => {
       >
         <SisyphusAndBoulderIcon
           className={cn(
-            "w-8 h-8 text-foreground",
-            clampedProgress > 0 && "animate-walk"
+            "w-8 h-8 text-foreground"
           )}
         />
       </div>
