@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 type ArchivedTask = {
   id: string;
@@ -15,8 +16,15 @@ type ArchivedTask = {
   date: string;
 };
 
+type ArchivedReflection = {
+    date: string;
+    prompt: string;
+    reflection: string;
+};
+
 export default function ArchivePage() {
     const [archivedTasks] = useLocalStorage<ArchivedTask[]>('stoic-archived-tasks', []);
+    const [archivedReflections] = useLocalStorage<ArchivedReflection[]>('stoic-reflections', []);
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
@@ -32,7 +40,9 @@ export default function ArchivePage() {
         return acc;
     }, {} as Record<string, ArchivedTask[]>);
 
-    const sortedDates = Object.keys(groupedTasks).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
+    const sortedTaskDates = Object.keys(groupedTasks).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
+    
+    const sortedReflectionDates = [...archivedReflections].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     if (!isClient) {
         return null; 
@@ -48,32 +58,59 @@ export default function ArchivePage() {
                         </Link>
                     </Button>
                 </div>
-                <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none">
+                 <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none">
                     <CardHeader>
-                        <CardTitle>ARCHIVED STEPS</CardTitle>
+                        <CardTitle>ARCHIVE</CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
-                        {sortedDates.length === 0 ? (
-                            <p className="text-center text-muted-foreground">No archived steps yet.</p>
-                        ) : (
-                            <div className="space-y-6">
-                                {sortedDates.map(date => (
-                                    <div key={date}>
-                                        <h3 className="text-xl md:text-2xl font-semibold mb-2 border-b-2 border-dashed border-muted pb-2">
-                                            {format(parseISO(date), 'MMMM do, yyyy')}
-                                        </h3>
-                                        <ul className="space-y-2 mt-2">
-                                            {groupedTasks[date].map(task => (
-                                                <li key={task.id} className="flex items-center gap-3">
-                                                    <span className="text-muted-foreground">-</span>
-                                                    <span>{task.text}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
+                        <Tabs defaultValue="reflections" className="w-full">
+                            <TabsList className="grid w-full grid-cols-2 rounded-none bg-transparent border-2 border-foreground p-0">
+                                <TabsTrigger value="reflections" className="rounded-none border-r-2 border-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Reflections</TabsTrigger>
+                                <TabsTrigger value="steps" className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Incomplete Steps</TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="reflections" className="mt-6">
+                                {sortedReflectionDates.length === 0 ? (
+                                    <p className="text-center text-muted-foreground">No archived reflections yet.</p>
+                                ) : (
+                                    <div className="space-y-6">
+                                        {sortedReflectionDates.map(item => (
+                                            <div key={item.date}>
+                                                <h3 className="text-xl md:text-2xl font-semibold mb-2 border-b-2 border-dashed border-muted pb-2">
+                                                    {format(parseISO(item.date), 'MMMM do, yyyy')}
+                                                </h3>
+                                                <div className="space-y-2 mt-4">
+                                                   <p className="text-muted-foreground text-lg">"{item.prompt}"</p>
+                                                   <p className="text-xl pl-4 border-l-2 border-primary">{item.reflection}</p>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
-                        )}
+                                )}
+                            </TabsContent>
+                            <TabsContent value="steps" className="mt-6">
+                                 {sortedTaskDates.length === 0 ? (
+                                    <p className="text-center text-muted-foreground">No incomplete steps.</p>
+                                ) : (
+                                    <div className="space-y-6">
+                                        {sortedTaskDates.map(date => (
+                                            <div key={date}>
+                                                <h3 className="text-xl md:text-2xl font-semibold mb-2 border-b-2 border-dashed border-muted pb-2">
+                                                    {format(parseISO(date), 'MMMM do, yyyy')}
+                                                </h3>
+                                                <ul className="space-y-2 mt-2">
+                                                    {groupedTasks[date].map(task => (
+                                                        <li key={task.id} className="flex items-center gap-3">
+                                                            <span className="text-muted-foreground">-</span>
+                                                            <span>{task.text}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </TabsContent>
+                        </Tabs>
                     </CardContent>
                 </Card>
             </main>
