@@ -204,12 +204,12 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen p-4 md:p-8 bg-background text-foreground text-2xl md:text-3xl">
+    <div className="flex flex-col items-center min-h-screen p-4 md:p-8 bg-background text-foreground text-2xl md:text-3xl fade-in">
       <main className="w-full max-w-2xl mx-auto flex flex-col gap-8">
         
         <SisyphusAnimation progress={progress} />
 
-        <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none">
+        <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none transition-all hover:shadow-lg hover:border-primary">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>DAILY STEPS</CardTitle>
             <div className="text-right">
@@ -227,13 +227,13 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
                 placeholder="A new step..."
                 className="bg-background rounded-none border-2 border-foreground focus-visible:ring-primary focus-visible:ring-offset-0"
               />
-              <Button onClick={handleAddTask} variant="outline" size="icon" className="rounded-none border-2 border-foreground hover:bg-primary hover:text-primary-foreground">
+              <Button onClick={handleAddTask} variant="outline" size="icon" className="rounded-none border-2 border-foreground hover:bg-primary hover:text-primary-foreground transition-transform active:scale-95">
                 <Plus className="h-6 w-6" />
               </Button>
             </div>
             <ul className="space-y-2">
               {tasks.map(task => (
-                <li key={task.id} className="flex items-center gap-2 p-2 border-b-2 border-dashed border-muted">
+                <li key={task.id} className="flex items-center gap-2 p-2 border-b-2 border-dashed border-muted fade-in transition-all">
                   {editingTaskId === task.id ? (
                      <>
                         <Input
@@ -253,13 +253,13 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
                         id={`task-${task.id}`}
                         checked={task.completed}
                         onCheckedChange={() => handleToggleComplete(task.id)}
-                        className="h-6 w-6 rounded-none border-2 border-foreground data-[state=checked]:bg-primary data-[state=checked]:text-black"
+                        className="h-6 w-6 rounded-none border-2 border-foreground data-[state=checked]:bg-primary data-[state=checked]:text-black transition-all"
                       />
-                      <label htmlFor={`task-${task.id}`} className={`flex-grow cursor-pointer ${task.completed ? 'line-through text-muted-foreground' : ''}`}>
+                      <label htmlFor={`task-${task.id}`} className={`flex-grow cursor-pointer transition-all ${task.completed ? 'line-through text-muted-foreground' : ''}`}>
                         {task.text}
                       </label>
-                      <Button onClick={() => handleStartEditing(task)} variant="ghost" size="icon"><Pencil className="h-5 w-5" /></Button>
-                      <Button onClick={() => handleDeleteTask(task.id)} variant="ghost" size="icon"><Trash2 className="h-5 w-5" /></Button>
+                      <Button onClick={() => handleStartEditing(task)} variant="ghost" size="icon" className="transition-transform active:scale-95"><Pencil className="h-5 w-5" /></Button>
+                      <Button onClick={() => handleDeleteTask(task.id)} variant="ghost" size="icon" className="transition-transform active:scale-95"><Trash2 className="h-5 w-5" /></Button>
                     </>
                   )}
                 </li>
@@ -273,19 +273,19 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
             {weeklyTotal > 0 && <p className="text-center text-lg md:text-xl text-muted-foreground mb-4">You pushed the boulder {weeklyTotal} steps this week. Keep climbing.</p>}
         </div>
 
-        <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none">
+        <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none transition-all hover:shadow-lg hover:border-primary">
           <CardContent className="p-6 flex items-center gap-4">
             <p className="text-center flex-grow">"{quote}"</p>
           </CardContent>
         </Card>
         
         <div className="text-center mt-4 flex justify-center items-center gap-4">
-            <Button asChild variant="link" className="text-lg md:text-xl text-foreground hover:text-primary">
+            <Button asChild variant="link" className="text-lg md:text-xl text-foreground hover:text-primary transition-transform active:scale-95">
                 <Link href="/reflection">
                     <BookOpen className="mr-2 h-5 w-5"/> Gratitude Journal
                 </Link>
             </Button>
-            <Button asChild variant="link" className="text-lg md:text-xl text-foreground hover:text-primary">
+            <Button asChild variant="link" className="text-lg md:text-xl text-foreground hover:text-primary transition-transform active:scale-95">
                 <Link href="/archive">
                     <Archive className="mr-2 h-5 w-5"/> Journey
                 </Link>
