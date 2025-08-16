@@ -227,9 +227,6 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
         <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none">
           <CardContent className="p-6 flex items-center gap-4">
             <p className="text-center flex-grow">"{quote}"</p>
-            <Button onClick={handleResetQuote} variant="ghost" size="icon" disabled={isRefreshingQuote}>
-                <RotateCcw className={`h-6 w-6 ${isRefreshingQuote ? 'animate-spin' : ''}`} />
-            </Button>
           </CardContent>
         </Card>
         
