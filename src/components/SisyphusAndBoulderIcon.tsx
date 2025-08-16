@@ -9,10 +9,28 @@ export function SisyphusAndBoulderIcon(props: SVGProps<SVGSVGElement>) {
       viewBox="0 0 32 32"
       fill="currentColor"
       {...props}
+      shapeRendering="crispEdges"
     >
-      <path d="M16 23c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7zm0-12c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z"/>
-      <path d="M12 25h-1v-1h-1v-1h-1v-1h-1v-1h-1v-1H6v-1H5v-1H4v-1H3v-1H2v-1H1v8h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v1h1v1h1v1h1v1z"/>
-      <path d="M11 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+      <path d="M10 12h2v2h-2z" />
+      <path d="M12 10h2v2h-2z" />
+      <path d="M14 10h2v2h-2z" />
+      <path d="M16 10h2v2h-2z" />
+      <path d="M18 12h2v2h-2z" />
+      <path d="M20 14h2v2h-2z" />
+      <path d="M20 16h2v2h-2z" />
+      <path d="M20 18h2v2h-2z" />
+      <path d="M18 20h2v2h-2z" />
+      <path d="M16 22h2v2h-2z" />
+      <path d="M14 22h2v2h-2z" />
+      <path d="M12 22h2v2h-2z" />
+      <path d="M10 20h2v2h-2z" />
+      <path d="M8 18h2v2h-2z" />
+      <path d="M8 16h2v2h-2z" />
+      <path d="M8 14h2v2h-2z" />
+
+      <path d="M12 12h6v8h-6z" />
+      <path d="M10 14h2v4h-2z" />
+      <path d="M18 14h2v4h-2z" />
     </svg>
   );
 }
