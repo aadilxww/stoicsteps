@@ -49,12 +49,14 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
   const [quote, setQuote] = useState(initialQuote);
   const [isRefreshingQuote, setIsRefreshingQuote] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
 
   useEffect(() => {
     setIsClient(true);
     setCurrentDate(format(new Date(), 'MMMM do, yyyy'));
+    audioRef.current = new Audio('/vagabond.mp3');
+    audioRef.current.loop = true;
   }, []);
 
   const handleResetQuote = useCallback(async () => {
@@ -179,12 +181,12 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
 
   const toggleMusic = () => {
     if (audioRef.current) {
-        if (isMusicPlaying) {
-            audioRef.current.pause();
-        } else {
-            audioRef.current.play();
-        }
-        setIsMusicPlaying(!isMusicPlaying);
+      if (isMusicPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(error => console.error("Error playing audio:", error));
+      }
+      setIsMusicPlaying(!isMusicPlaying);
     }
   };
   
@@ -281,7 +283,6 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
             </Button>
             <MusicToggle isPlaying={isMusicPlaying} onToggle={toggleMusic} />
         </div>
-        <audio ref={audioRef} src="/vagabond.mp3" loop />
       </main>
     </div>
   );
