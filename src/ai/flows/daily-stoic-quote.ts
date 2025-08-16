@@ -36,11 +36,11 @@ const prompt = ai.definePrompt({
   output: {schema: DailyStoicQuoteOutputSchema},
   prompt: `Here is a list of stoic quotes:
 
-  {{#each stoicQuotes}}
+  {{#each quotes}}
   - {{{this}}}
   {{/each}}
 
-  Return a random stoic quote from the list.`,
+  Choose one quote from the list above. Just respond with the quote.`,
 });
 
 const dailyStoicQuoteFlow = ai.defineFlow(
@@ -49,12 +49,11 @@ const dailyStoicQuoteFlow = ai.defineFlow(
     outputSchema: DailyStoicQuoteOutputSchema,
   },
   async () => {
-    const randomIndex = Math.floor(Math.random() * stoicQuotes.length);
     const {output} = await prompt({
-      stoicQuotes,
+      quotes: stoicQuotes,
     });
     return {
-      quote: stoicQuotes[randomIndex],
+      quote: output!.quote,
     };
   }
 );
