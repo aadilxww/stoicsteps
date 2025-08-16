@@ -36,11 +36,9 @@ const prompt = ai.definePrompt({
   output: {schema: DailyStoicQuoteOutputSchema},
   prompt: `Here is a list of stoic quotes:
 
-  {{#each quotes}}
-  - {{{this}}}
-  {{/each}}
+${stoicQuotes.map((quote, index) => `${index + 1}. ${quote}`).join('\n')}
 
-  Choose one quote from the list above. Just respond with the quote.`,
+Choose one quote from the list above. Just respond with the quote.`,
 });
 
 const dailyStoicQuoteFlow = ai.defineFlow(
@@ -49,9 +47,7 @@ const dailyStoicQuoteFlow = ai.defineFlow(
     outputSchema: DailyStoicQuoteOutputSchema,
   },
   async () => {
-    const {output} = await prompt({
-      quotes: stoicQuotes,
-    });
+    const {output} = await prompt({});
     return {
       quote: output!.quote,
     };
