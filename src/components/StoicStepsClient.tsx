@@ -1,14 +1,15 @@
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import SisyphusProgressBar from './SisyphusProgressBar';
-import { Plus, Pencil, Trash2, Save, X, BookOpen } from 'lucide-react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Plus, Pencil, Trash2, Save, X, BookOpen, CalendarIcon } from 'lucide-react';
+import { format } from 'date-fns';
 
 type Task = {
   id: string;
@@ -22,20 +23,23 @@ type WeeklyProgress = {
 
 interface StoicStepsClientProps {
   quote: string;
-  reflectionPrompt: string;
 }
 
-export default function StoicStepsClient({ quote, reflectionPrompt }: StoicStepsClientProps) {
+export default function StoicStepsClient({ quote }: StoicStepsClientProps) {
   const [tasks, setTasks] = useLocalStorage<Task[]>('stoic-tasks', []);
   const [lastResetDate, setLastResetDate] = useLocalStorage<string>('stoic-last-reset', '');
   const [weeklyProgress, setWeeklyProgress] = useLocalStorage<WeeklyProgress>('stoic-weekly-progress', {});
   const [newTaskText, setNewTaskText] = useState('');
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [editingTaskText, setEditingTaskText] = useState('');
+  const [showDate, setShowDate] = useState(false);
   
   const [isClient, setIsClient] = useState(false);
+  const [currentDate, setCurrentDate] = useState('');
+
   useEffect(() => {
     setIsClient(true);
+    setCurrentDate(format(new Date(), 'MMMM do, yyyy'));
   }, []);
 
   useEffect(() => {
@@ -51,6 +55,7 @@ export default function StoicStepsClient({ quote, reflectionPrompt }: StoicSteps
   const completedTasks = useMemo(() => tasks.filter(t => t.completed).length, [tasks]);
   const totalTasks = tasks.length;
   const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+  const isWalking = tasks.some(t => !t.completed);
 
   const weeklyTotal = useMemo(() => {
     const today = new Date();
@@ -138,15 +143,20 @@ export default function StoicStepsClient({ quote, reflectionPrompt }: StoicSteps
           </CardContent>
         </Card>
 
-        <SisyphusProgressBar progress={progress} />
+        <SisyphusProgressBar progress={progress} isWalking={isWalking} />
+        
+        {showDate && <p className="text-center text-lg md:text-xl text-muted-foreground -mt-4 mb-4">{currentDate}</p>}
 
         <div>
             {weeklyTotal > 0 && <p className="text-center text-lg md:text-xl text-muted-foreground mb-4">You pushed the boulder {weeklyTotal} steps this week. Keep climbing.</p>}
         </div>
 
         <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none">
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>DAILY STEPS</CardTitle>
+            <Button onClick={() => setShowDate(!showDate)} variant="ghost" size="icon">
+                <CalendarIcon className="h-6 w-6" />
+            </Button>
           </CardHeader>
           <CardContent>
             <div className="flex gap-2 mb-4">
@@ -201,24 +211,11 @@ export default function StoicStepsClient({ quote, reflectionPrompt }: StoicSteps
         </Card>
         
         <div className="text-center mt-4">
-          <Dialog>
-            <DialogTrigger asChild>
-               <Button variant="link" className="text-lg md:text-xl text-foreground hover:text-primary">
-                <BookOpen className="mr-2 h-5 w-5"/> Daily Reflection
-               </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] bg-background border-foreground border-2 rounded-none">
-              <DialogHeader>
-                <DialogTitle className="font-headline">REFLECTION</DialogTitle>
-                <DialogDescription className="font-body text-muted-foreground">
-                  Ponder on this.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="py-4 text-2xl">
-                <p>{reflectionPrompt}</p>
-              </div>
-            </DialogContent>
-          </Dialog>
+            <Button asChild variant="link" className="text-lg md:text-xl text-foreground hover:text-primary">
+                <Link href="/reflection">
+                    <BookOpen className="mr-2 h-5 w-5"/> Daily Reflection
+                </Link>
+            </Button>
         </div>
       </main>
     </div>
