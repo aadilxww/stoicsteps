@@ -70,6 +70,7 @@ export default function ReflectionPage() {
             title: "Life is good",
             description: "Your gratitude has been saved in the Journey Section."
         });
+        setReflection("");
     };
 
     return (
@@ -99,8 +100,8 @@ export default function ReflectionPage() {
                             className="bg-background rounded-none border-2 border-foreground focus-visible:ring-primary focus-visible:ring-offset-0 text-xl"
                             rows={6}
                         />
-                         <Button onClick={handleSaveReflection} className="w-full rounded-none border-2 border-foreground hover:bg-primary hover:text-primary-foreground">
-                            <Save className="mr-2 h-5 w-5" /> Save Entry
+                         <Button onClick={handleSaveReflection} className="w-full rounded-none border-2 border-foreground hover:bg-primary hover:text-primary-foreground text-2xl py-6">
+                            <Save className="mr-2 h-6 w-6" /> Save Entry
                         </Button>
                     </CardContent>
                 </Card>

@@ -14,6 +14,7 @@ import { format } from 'date-fns';
 import { getDailyStoicQuote } from '@/ai/flows/daily-stoic-quote';
 import TimeLeftTimer from './TimeLeftTimer';
 import MusicToggle from './MusicToggle';
+import { useToast } from '@/hooks/use-toast';
 
 type Task = {
   id: string;
@@ -50,6 +51,7 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
   const [isRefreshingQuote, setIsRefreshingQuote] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { toast } = useToast();
 
 
   useEffect(() => {
@@ -69,7 +71,7 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     } finally {
       setIsRefreshingQuote(false);
     }
-  }, []);
+  }, [setQuote]);
 
   useEffect(() => {
     if (isClient) {
