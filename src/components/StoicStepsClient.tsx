@@ -57,8 +57,13 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
   useEffect(() => {
     setIsClient(true);
     setCurrentDate(format(new Date(), 'MMMM do, yyyy'));
-    audioRef.current = new Audio('/music/Vagabond.mp3');
-    audioRef.current.loop = true;
+    // Initialize Audio on the client side
+    if (typeof Audio !== 'undefined') {
+        audioRef.current = new Audio('/music/Vagabond.mp3');
+        if (audioRef.current) {
+            audioRef.current.loop = true;
+        }
+    }
   }, []);
 
   const handleResetQuote = useCallback(async () => {
