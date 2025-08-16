@@ -57,15 +57,23 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
   useEffect(() => {
     setIsClient(true);
     setCurrentDate(format(new Date(), 'MMMM do, yyyy'));
-    // Initialize Audio on the client side
-    if (typeof Audio !== 'undefined' && !audioRef.current) {
-        audioRef.current = new Audio('/music/Vagabond.mp3');
-        audioRef.current.loop = true;
-        if (isMusicPlaying) {
-          audioRef.current.play().catch(error => console.error("Error playing audio:", error));
-        }
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
+    if (!audioRef.current) {
+      audioRef.current = new Audio('/music/Vagabond.mp3');
+      audioRef.current.loop = true;
     }
-  }, [isMusicPlaying]);
+
+    if (isMusicPlaying) {
+      audioRef.current.play().catch(error => console.error("Error playing audio:", error));
+    } else {
+      audioRef.current.pause();
+    }
+  }, [isMusicPlaying, isClient]);
+
 
   const handleResetQuote = useCallback(async () => {
     setIsRefreshingQuote(true);
@@ -188,14 +196,7 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
   };
 
   const toggleMusic = () => {
-    if (audioRef.current) {
-      if (isMusicPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play().catch(error => console.error("Error playing audio:", error));
-      }
-      setIsMusicPlaying(!isMusicPlaying);
-    }
+    setIsMusicPlaying(!isMusicPlaying);
   };
   
   if (!isClient) {
@@ -295,5 +296,7 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     </div>
   );
 }
+
+    
 
     
