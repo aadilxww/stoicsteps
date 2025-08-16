@@ -10,7 +10,9 @@ export function SisyphusAndBoulderIcon(props: SVGProps<SVGSVGElement>) {
       fill="currentColor"
       {...props}
     >
-      <path d="M19.5 14.5c-2.48 0-4.5 2.02-4.5 4.5s2.02 4.5 4.5 4.5 4.5-2.02 4.5-4.5-2.02-4.5-4.5-4.5zM12 18v-2h-1v-1h-1v2h-2v1h2v2h1v-1h1v-2zM10 20l-1 1v1h-1v1h-1v1h-1v1H5v1H4v1H3v1H2v-6l1-1h1l1 1v1h1v1h1v1h1v-1h1l1-1zM30 30H2V29h1v-1h1v-1h1v-1h1l1-1h1v-1h1v-1h1v-1h1v-1h1v-1h-1v-1h-1v-1h-1v-1h-1v-1h-1v-1h1V9h1v1h1v1h1v1h1v1h1v1h-1v1h-1v1h-1v1h-1v1h-1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h-2v1h-1v1h-2v1h-4v-1h2v-1h1v-1h1v-1z" />
+      <path d="M16 23c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7zm0-12c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z"/>
+      <path d="M12 25h-1v-1h-1v-1h-1v-1h-1v-1h-1v-1H6v-1H5v-1H4v-1H3v-1H2v-1H1v8h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v1h1v1h1v1h1v1z"/>
+      <path d="M11 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
     </svg>
   );
 }
