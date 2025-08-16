@@ -58,11 +58,9 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     setIsClient(true);
     setCurrentDate(format(new Date(), 'MMMM do, yyyy'));
     // Initialize Audio on the client side
-    if (typeof Audio !== 'undefined') {
+    if (typeof Audio !== 'undefined' && !audioRef.current) {
         audioRef.current = new Audio('/music/Vagabond.mp3');
-        if (audioRef.current) {
-            audioRef.current.loop = true;
-        }
+        audioRef.current.loop = true;
     }
   }, []);
 
@@ -294,3 +292,5 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     </div>
   );
 }
+
+    
