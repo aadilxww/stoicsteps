@@ -67,8 +67,7 @@ export default function ReflectionPage() {
         }
         
         toast({
-            title: "Journal Entry Saved",
-            description: "Your thoughts have been recorded in the archive.",
+            title: "Life is Good",
         });
     };
 
