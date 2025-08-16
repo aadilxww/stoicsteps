@@ -49,7 +49,7 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
   const [currentDate, setCurrentDate] = useState('');
   const [quote, setQuote] = useState(initialQuote);
   const [isRefreshingQuote, setIsRefreshingQuote] = useState(false);
-  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
 
@@ -61,8 +61,11 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     if (typeof Audio !== 'undefined' && !audioRef.current) {
         audioRef.current = new Audio('/music/Vagabond.mp3');
         audioRef.current.loop = true;
+        if (isMusicPlaying) {
+          audioRef.current.play().catch(error => console.error("Error playing audio:", error));
+        }
     }
-  }, []);
+  }, [isMusicPlaying]);
 
   const handleResetQuote = useCallback(async () => {
     setIsRefreshingQuote(true);
