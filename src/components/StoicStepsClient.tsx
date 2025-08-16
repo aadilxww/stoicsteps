@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import SisyphusProgressBar from './SisyphusProgressBar';
-import { Plus, Pencil, Trash2, Save, X, BookOpen, CalendarIcon, RotateCcw } from 'lucide-react';
+import { Plus, Pencil, Trash2, Save, X, BookOpen, RotateCcw } from 'lucide-react';
 import { format } from 'date-fns';
 import { getDailyStoicQuote } from '@/ai/flows/daily-stoic-quote';
 
@@ -33,7 +33,6 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
   const [newTaskText, setNewTaskText] = useState('');
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [editingTaskText, setEditingTaskText] = useState('');
-  const [showDate, setShowDate] = useState(false);
   
   const [isClient, setIsClient] = useState(false);
   const [currentDate, setCurrentDate] = useState('');
@@ -45,15 +44,37 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     setCurrentDate(format(new Date(), 'MMMM do, yyyy'));
   }, []);
 
+  const handleResetQuote = useCallback(async () => {
+    setIsRefreshingQuote(true);
+    try {
+      const { quote: newQuote } = await getDailyStoicQuote();
+      setQuote(newQuote);
+    } catch (error) {
+      console.error("Failed to fetch new quote", error);
+    } finally {
+      setIsRefreshingQuote(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (isClient) {
         const today = new Date().toISOString().split('T')[0];
         if (lastResetDate !== today) {
             setTasks([]);
             setLastResetDate(today);
+            handleResetQuote();
         }
     }
-  }, [isClient, lastResetDate, setTasks, setLastResetDate]);
+  }, [isClient, lastResetDate, setTasks, setLastResetDate, handleResetQuote]);
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+        handleResetQuote();
+    }, 5 * 60 * 1000); // 5 minutes
+
+    return () => clearInterval(interval);
+  }, [handleResetQuote]);
+
 
   const completedTasks = useMemo(() => tasks.filter(t => t.completed).length, [tasks]);
   const totalTasks = tasks.length;
@@ -131,18 +152,6 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     setEditingTaskId(null);
     setEditingTaskText('');
   };
-
-  const handleResetQuote = useCallback(async () => {
-    setIsRefreshingQuote(true);
-    try {
-      const { quote: newQuote } = await getDailyStoicQuote();
-      setQuote(newQuote);
-    } catch (error) {
-      console.error("Failed to fetch new quote", error);
-    } finally {
-      setIsRefreshingQuote(false);
-    }
-  }, []);
   
   if (!isClient) {
       return null;
@@ -162,7 +171,7 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
 
         <SisyphusProgressBar progress={progress} isWalking={true} />
         
-        {showDate && <p className="text-center text-lg md:text-xl text-muted-foreground -mt-4 mb-4">{currentDate}</p>}
+        <p className="text-center text-lg md:text-xl text-muted-foreground -mt-4 mb-4">{currentDate}</p>
 
         <div>
             {weeklyTotal > 0 && <p className="text-center text-lg md:text-xl text-muted-foreground mb-4">You pushed the boulder {weeklyTotal} steps this week. Keep climbing.</p>}
@@ -171,9 +180,6 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
         <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>DAILY STEPS</CardTitle>
-            <Button onClick={() => setShowDate(!showDate)} variant="ghost" size="icon">
-                <CalendarIcon className="h-6 w-6" />
-            </Button>
           </CardHeader>
           <CardContent>
             <div className="flex gap-2 mb-4">
