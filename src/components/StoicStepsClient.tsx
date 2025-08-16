@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import SisyphusAnimation from '@/components/SisyphusAnimation';
-import { Plus, Pencil, Trash2, Save, X, BookOpen } from 'lucide-react';
+import { Plus, Pencil, Trash2, Save, X, BookOpen, Archive } from 'lucide-react';
 import { format } from 'date-fns';
 import { getDailyStoicQuote } from '@/ai/flows/daily-stoic-quote';
 import TimeLeftTimer from './TimeLeftTimer';
@@ -18,6 +18,12 @@ type Task = {
   text: string;
   completed: boolean;
 };
+
+type ArchivedTask = {
+  id: string;
+  text: string;
+  date: string;
+}
 
 type WeeklyProgress = {
   [date: string]: number;
@@ -30,6 +36,7 @@ interface StoicStepsClientProps {
 export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClientProps) {
   const [tasks, setTasks] = useLocalStorage<Task[]>('stoic-tasks', []);
   const [lastResetDate, setLastResetDate] = useLocalStorage<string>('stoic-last-reset', '');
+  const [archivedTasks, setArchivedTasks] = useLocalStorage<ArchivedTask[]>('stoic-archived-tasks', []);
   const [weeklyProgress, setWeeklyProgress] = useLocalStorage<WeeklyProgress>('stoic-weekly-progress', {});
   const [newTaskText, setNewTaskText] = useState('');
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
@@ -60,13 +67,24 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
   useEffect(() => {
     if (isClient) {
         const today = new Date().toISOString().split('T')[0];
-        if (lastResetDate !== today) {
+        if (lastResetDate !== today && lastResetDate) {
+            const incompleteTasks = tasks.filter(task => !task.completed);
+            if (incompleteTasks.length > 0) {
+              const newArchivedTasks: ArchivedTask[] = incompleteTasks.map(task => ({
+                id: task.id,
+                text: task.text,
+                date: lastResetDate
+              }));
+              setArchivedTasks([...newArchivedTasks, ...archivedTasks]);
+            }
             setTasks([]);
             setLastResetDate(today);
             handleResetQuote();
+        } else if (!lastResetDate) {
+          setLastResetDate(today);
         }
     }
-  }, [isClient, lastResetDate, setTasks, setLastResetDate, handleResetQuote]);
+  }, [isClient, lastResetDate, setTasks, setLastResetDate, handleResetQuote, tasks, archivedTasks, setArchivedTasks]);
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -234,10 +252,15 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
           </CardContent>
         </Card>
         
-        <div className="text-center mt-4">
+        <div className="text-center mt-4 flex justify-center gap-4">
             <Button asChild variant="link" className="text-lg md:text-xl text-foreground hover:text-primary">
                 <Link href="/reflection">
                     <BookOpen className="mr-2 h-5 w-5"/> Daily Reflection
+                </Link>
+            </Button>
+            <Button asChild variant="link" className="text-lg md:text-xl text-foreground hover:text-primary">
+                <Link href="/archive">
+                    <Archive className="mr-2 h-5 w-5"/> View Archive
                 </Link>
             </Button>
         </div>
