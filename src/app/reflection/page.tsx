@@ -68,7 +68,7 @@ export default function ReflectionPage() {
         
         toast({
             title: "Life is good",
-            description: "Your gratitude has been saved in the Journal Section."
+            description: "Your gratitude has been saved in the Journey Section."
         });
     };
 
