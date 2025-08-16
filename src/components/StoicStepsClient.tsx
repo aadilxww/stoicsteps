@@ -11,6 +11,7 @@ import SisyphusAnimation from '@/components/SisyphusAnimation';
 import { Plus, Pencil, Trash2, Save, X, BookOpen } from 'lucide-react';
 import { format } from 'date-fns';
 import { getDailyStoicQuote } from '@/ai/flows/daily-stoic-quote';
+import TimeLeftTimer from './TimeLeftTimer';
 
 type Task = {
   id: string;
@@ -166,7 +167,10 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
         <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>DAILY STEPS</CardTitle>
-            <p className="text-lg md:text-xl text-muted-foreground">{currentDate}</p>
+            <div className="text-right">
+              <p className="text-lg md:text-xl text-muted-foreground">{currentDate}</p>
+              <TimeLeftTimer />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="flex gap-2 mb-4">
