@@ -278,7 +278,7 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
             </Button>
             <Button asChild variant="link" className="text-lg md:text-xl text-foreground hover:text-primary">
                 <Link href="/archive">
-                    <Archive className="mr-2 h-5 w-5"/> View Archive
+                    <Archive className="mr-2 h-5 w-5"/> Journey
                 </Link>
             </Button>
             <MusicToggle isPlaying={isMusicPlaying} onToggle={toggleMusic} />
