@@ -273,7 +273,7 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
         <div className="text-center mt-4 flex justify-center items-center gap-4">
             <Button asChild variant="link" className="text-lg md:text-xl text-foreground hover:text-primary">
                 <Link href="/reflection">
-                    <BookOpen className="mr-2 h-5 w-5"/> Daily Reflection
+                    <BookOpen className="mr-2 h-5 w-5"/> Gratitude Journal
                 </Link>
             </Button>
             <Button asChild variant="link" className="text-lg md:text-xl text-foreground hover:text-primary">

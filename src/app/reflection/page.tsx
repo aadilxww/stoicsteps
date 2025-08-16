@@ -31,7 +31,7 @@ export default function ReflectionPage() {
                 setPrompt(prompt);
             } catch (error) {
                 console.error("Failed to fetch reflection prompt", error);
-                setPrompt("What is on your mind today?");
+                setPrompt("What are you grateful for today?");
             } finally {
                 setIsLoading(false);
             }
@@ -42,7 +42,7 @@ export default function ReflectionPage() {
     const handleSaveReflection = () => {
         if (reflection.trim() === "") {
              toast({
-                title: "Cannot save empty reflection.",
+                title: "Cannot save empty journal entry.",
                 variant: "destructive",
             });
             return;
@@ -67,7 +67,7 @@ export default function ReflectionPage() {
         }
         
         toast({
-            title: "Reflection Saved",
+            title: "Journal Entry Saved",
             description: "Your thoughts have been recorded in the archive.",
         });
     };
@@ -84,7 +84,7 @@ export default function ReflectionPage() {
                 </div>
                 <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none">
                     <CardHeader>
-                        <CardTitle>DAILY REFLECTION</CardTitle>
+                        <CardTitle>GRATITUDE JOURNAL</CardTitle>
                     </CardHeader>
                     <CardContent className="p-6 space-y-6">
                         {isLoading ? (
@@ -93,14 +93,14 @@ export default function ReflectionPage() {
                             <p className="text-center text-3xl md:text-4xl">"{prompt}"</p>
                         )}
                         <Textarea
-                            placeholder="Your reflection..."
+                            placeholder="Your thoughts..."
                             value={reflection}
                             onChange={(e) => setReflection(e.target.value)}
                             className="bg-background rounded-none border-2 border-foreground focus-visible:ring-primary focus-visible:ring-offset-0 text-xl"
                             rows={6}
                         />
                          <Button onClick={handleSaveReflection} className="w-full rounded-none border-2 border-foreground hover:bg-primary hover:text-primary-foreground">
-                            <Save className="mr-2 h-5 w-5" /> Save Reflection
+                            <Save className="mr-2 h-5 w-5" /> Save Entry
                         </Button>
                     </CardContent>
                 </Card>

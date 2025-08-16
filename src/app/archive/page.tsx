@@ -65,12 +65,12 @@ export default function ArchivePage() {
                     <CardContent className="p-6">
                         <Tabs defaultValue="reflections" className="w-full">
                             <TabsList className="grid w-full grid-cols-2 rounded-none bg-transparent border-2 border-foreground p-0">
-                                <TabsTrigger value="reflections" className="rounded-none border-r-2 border-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Reflections</TabsTrigger>
+                                <TabsTrigger value="reflections" className="rounded-none border-r-2 border-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Journal</TabsTrigger>
                                 <TabsTrigger value="steps" className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Incomplete Steps</TabsTrigger>
                             </TabsList>
                             <TabsContent value="reflections" className="mt-6">
                                 {sortedReflectionDates.length === 0 ? (
-                                    <p className="text-center text-muted-foreground">No archived reflections yet.</p>
+                                    <p className="text-center text-muted-foreground">No journal entries yet.</p>
                                 ) : (
                                     <div className="space-y-6">
                                         {sortedReflectionDates.map(item => (
