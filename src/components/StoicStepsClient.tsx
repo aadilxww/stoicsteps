@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import SisyphusAnimation from '@/components/SisyphusAnimation';
-import { Plus, Pencil, Trash2, Save, X, BookOpen, Archive } from 'lucide-react';
+import { Plus, Pencil, Trash2, Save, X, BookOpen, Archive, HelpCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { getDailyStoicQuote } from '@/ai/flows/daily-stoic-quote';
 import TimeLeftTimer from './TimeLeftTimer';
@@ -279,7 +279,12 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
           </CardContent>
         </Card>
         
-        <div className="text-center mt-4 flex justify-center items-center gap-4">
+        <div className="text-center mt-4 flex justify-center items-center gap-2 flex-wrap">
+            <Button asChild variant="link" className="text-lg md:text-xl text-foreground hover:text-primary transition-transform active:scale-95">
+                <Link href="/why-stoic-steps">
+                    <HelpCircle className="mr-2 h-5 w-5"/> Why Stoic Steps?
+                </Link>
+            </Button>
             <Button asChild variant="link" className="text-lg md:text-xl text-foreground hover:text-primary transition-transform active:scale-95">
                 <Link href="/reflection">
                     <BookOpen className="mr-2 h-5 w-5"/> Gratitude Journal
