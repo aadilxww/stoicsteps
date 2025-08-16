@@ -49,7 +49,7 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
   const [currentDate, setCurrentDate] = useState('');
   const [quote, setQuote] = useState(initialQuote);
   const [isRefreshingQuote, setIsRefreshingQuote] = useState(false);
-  const [isMusicPlaying, setIsMusicPlaying] = useState(true);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
 
@@ -59,20 +59,23 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     setCurrentDate(format(new Date(), 'MMMM do, yyyy'));
   }, []);
 
-  useEffect(() => {
-    if (isClient) {
-      if (!audioRef.current) {
-        audioRef.current = new Audio('/music/Vagabond.mp3');
-        audioRef.current.loop = true;
-      }
+  const toggleMusic = useCallback(() => {
+    setIsMusicPlaying(prev => !prev);
+  }, []);
 
+  useEffect(() => {
+    const audioElement = audioRef.current;
+    if (audioElement) {
       if (isMusicPlaying) {
-        audioRef.current.play().catch(error => console.error("Error playing audio:", error));
+        audioElement.play().catch(error => {
+          console.error("Error playing audio:", error);
+          setIsMusicPlaying(false);
+        });
       } else {
-        audioRef.current.pause();
+        audioElement.pause();
       }
     }
-  }, [isClient, isMusicPlaying]);
+  }, [isMusicPlaying]);
 
 
   const handleResetQuote = useCallback(async () => {
@@ -194,10 +197,6 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     setEditingTaskId(null);
     setEditingTaskText('');
   };
-
-  const toggleMusic = () => {
-    setIsMusicPlaying(!isMusicPlaying);
-  };
   
   if (!isClient) {
       return null;
@@ -205,6 +204,7 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
 
   return (
     <div className="flex flex-col items-center min-h-screen p-4 md:p-8 bg-background text-foreground text-2xl md:text-3xl fade-in">
+       {isClient && <audio ref={audioRef} src="/music/vagabond.mp3" loop />}
       <main className="w-full max-w-2xl mx-auto flex flex-col gap-8">
         
         <SisyphusAnimation progress={progress} />
@@ -301,3 +301,5 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     </div>
   );
 }
+
+    
