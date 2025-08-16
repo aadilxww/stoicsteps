@@ -60,23 +60,39 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
   }, []);
 
   const toggleMusic = useCallback(() => {
-    setIsMusicPlaying(prev => !prev);
+    const audioElement = audioRef.current;
+    if (!audioElement) return;
+
+    setIsMusicPlaying(prev => {
+        const shouldPlay = !prev;
+        if (shouldPlay) {
+            audioElement.currentTime = 15;
+            audioElement.play().catch(error => {
+              console.error("Error playing audio:", error);
+              return false; // Revert state if play fails
+            });
+        } else {
+            audioElement.pause();
+        }
+        return shouldPlay;
+    });
   }, []);
 
   useEffect(() => {
     const audioElement = audioRef.current;
     if (audioElement) {
-      if (isMusicPlaying) {
-        audioElement.play().catch(error => {
-          console.error("Error playing audio:", error);
-          setIsMusicPlaying(false);
-        });
-      } else {
-        audioElement.pause();
-      }
-    }
-  }, [isMusicPlaying]);
+        const handleLoop = () => {
+            audioElement.currentTime = 15;
+            audioElement.play();
+        };
 
+        audioElement.addEventListener('ended', handleLoop);
+        
+        return () => {
+            audioElement.removeEventListener('ended', handleLoop);
+        };
+    }
+  }, [isClient]);
 
   const handleResetQuote = useCallback(async () => {
     setIsRefreshingQuote(true);
@@ -204,7 +220,7 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
 
   return (
     <div className="flex flex-col items-center min-h-screen p-4 md:p-8 bg-background text-foreground text-2xl md:text-3xl fade-in">
-       {isClient && <audio ref={audioRef} src="/music/vagabond.mp3" loop />}
+       {isClient && <audio ref={audioRef} src="/music/vagabond.mp3" />}
       <main className="w-full max-w-2xl mx-auto flex flex-col gap-8">
         
         <SisyphusAnimation progress={progress} />
@@ -301,5 +317,7 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
     </div>
   );
 }
+
+    
 
     
