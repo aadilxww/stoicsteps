@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { Button } from '@/components/ui/button';
@@ -8,8 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import SisyphusProgressBar from './SisyphusProgressBar';
-import { Plus, Pencil, Trash2, Save, X, BookOpen, CalendarIcon } from 'lucide-react';
+import { Plus, Pencil, Trash2, Save, X, BookOpen, CalendarIcon, RotateCcw } from 'lucide-react';
 import { format } from 'date-fns';
+import { getDailyStoicQuote } from '@/ai/flows/daily-stoic-quote';
 
 type Task = {
   id: string;
@@ -25,7 +26,7 @@ interface StoicStepsClientProps {
   quote: string;
 }
 
-export default function StoicStepsClient({ quote }: StoicStepsClientProps) {
+export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClientProps) {
   const [tasks, setTasks] = useLocalStorage<Task[]>('stoic-tasks', []);
   const [lastResetDate, setLastResetDate] = useLocalStorage<string>('stoic-last-reset', '');
   const [weeklyProgress, setWeeklyProgress] = useLocalStorage<WeeklyProgress>('stoic-weekly-progress', {});
@@ -36,6 +37,8 @@ export default function StoicStepsClient({ quote }: StoicStepsClientProps) {
   
   const [isClient, setIsClient] = useState(false);
   const [currentDate, setCurrentDate] = useState('');
+  const [quote, setQuote] = useState(initialQuote);
+  const [isRefreshingQuote, setIsRefreshingQuote] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -55,8 +58,7 @@ export default function StoicStepsClient({ quote }: StoicStepsClientProps) {
   const completedTasks = useMemo(() => tasks.filter(t => t.completed).length, [tasks]);
   const totalTasks = tasks.length;
   const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
-  const isWalking = tasks.some(t => !t.completed);
-
+  
   const weeklyTotal = useMemo(() => {
     const today = new Date();
     let count = 0;
@@ -129,6 +131,18 @@ export default function StoicStepsClient({ quote }: StoicStepsClientProps) {
     setEditingTaskId(null);
     setEditingTaskText('');
   };
+
+  const handleResetQuote = useCallback(async () => {
+    setIsRefreshingQuote(true);
+    try {
+      const { quote: newQuote } = await getDailyStoicQuote();
+      setQuote(newQuote);
+    } catch (error) {
+      console.error("Failed to fetch new quote", error);
+    } finally {
+      setIsRefreshingQuote(false);
+    }
+  }, []);
   
   if (!isClient) {
       return null;
@@ -138,12 +152,15 @@ export default function StoicStepsClient({ quote }: StoicStepsClientProps) {
     <div className="flex flex-col items-center min-h-screen p-4 md:p-8 bg-background text-foreground text-2xl md:text-3xl">
       <main className="w-full max-w-2xl mx-auto flex flex-col gap-8">
         <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none">
-          <CardContent className="p-6">
-            <p className="text-center">"{quote}"</p>
+          <CardContent className="p-6 flex items-center gap-4">
+            <p className="text-center flex-grow">"{quote}"</p>
+            <Button onClick={handleResetQuote} variant="ghost" size="icon" disabled={isRefreshingQuote}>
+                <RotateCcw className={`h-6 w-6 ${isRefreshingQuote ? 'animate-spin' : ''}`} />
+            </Button>
           </CardContent>
         </Card>
 
-        <SisyphusProgressBar progress={progress} isWalking={isWalking} />
+        <SisyphusProgressBar progress={progress} isWalking={true} />
         
         {showDate && <p className="text-center text-lg md:text-xl text-muted-foreground -mt-4 mb-4">{currentDate}</p>}
 
