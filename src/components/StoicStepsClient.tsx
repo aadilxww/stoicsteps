@@ -160,26 +160,13 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
   return (
     <div className="flex flex-col items-center min-h-screen p-4 md:p-8 bg-background text-foreground text-2xl md:text-3xl">
       <main className="w-full max-w-2xl mx-auto flex flex-col gap-8">
-        <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none">
-          <CardContent className="p-6 flex items-center gap-4">
-            <p className="text-center flex-grow">"{quote}"</p>
-            <Button onClick={handleResetQuote} variant="ghost" size="icon" disabled={isRefreshingQuote}>
-                <RotateCcw className={`h-6 w-6 ${isRefreshingQuote ? 'animate-spin' : ''}`} />
-            </Button>
-          </CardContent>
-        </Card>
-
-        <SisyphusProgressBar progress={progress} isWalking={true} />
         
-        <p className="text-center text-lg md:text-xl text-muted-foreground -mt-4 mb-4">{currentDate}</p>
-
-        <div>
-            {weeklyTotal > 0 && <p className="text-center text-lg md:text-xl text-muted-foreground mb-4">You pushed the boulder {weeklyTotal} steps this week. Keep climbing.</p>}
-        </div>
+        <SisyphusProgressBar progress={progress} isWalking={true} />
 
         <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>DAILY STEPS</CardTitle>
+            <p className="text-lg md:text-xl text-muted-foreground">{currentDate}</p>
           </CardHeader>
           <CardContent>
             <div className="flex gap-2 mb-4">
@@ -230,6 +217,19 @@ export default function StoicStepsClient({ quote: initialQuote }: StoicStepsClie
               ))}
             </ul>
              {tasks.length === 0 && <p className="text-muted-foreground text-center p-4">No steps taken yet. Begin.</p>}
+          </CardContent>
+        </Card>
+
+        <div>
+            {weeklyTotal > 0 && <p className="text-center text-lg md:text-xl text-muted-foreground mb-4">You pushed the boulder {weeklyTotal} steps this week. Keep climbing.</p>}
+        </div>
+
+        <Card className="border-foreground border-2 rounded-none bg-transparent shadow-none">
+          <CardContent className="p-6 flex items-center gap-4">
+            <p className="text-center flex-grow">"{quote}"</p>
+            <Button onClick={handleResetQuote} variant="ghost" size="icon" disabled={isRefreshingQuote}>
+                <RotateCcw className={`h-6 w-6 ${isRefreshingQuote ? 'animate-spin' : ''}`} />
+            </Button>
           </CardContent>
         </Card>
         
