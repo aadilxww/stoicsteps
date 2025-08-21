@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import Image from 'next/image';
+import { SisyphusAndBoulderIcon } from '@/components/SisyphusAndBoulderIcon';
 
 export const metadata: Metadata = {
   title: 'Stoic Steps',
@@ -30,13 +31,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <header className="absolute top-4 left-4 z-10">
-          <Image
-            src="/images/Stoic Steps.png"
-            alt="Stoic Steps Logo"
-            width={64}
-            height={64}
-            className="w-16 h-16"
-          />
+          <SisyphusAndBoulderIcon className="w-16 h-16 text-foreground" />
         </header>
         {children}
         <Toaster />
